@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import {typeOrmAsyncConfig} from "./config/typeorm.config";
 import {ConfigModule} from "@nestjs/config";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {typeOrmAsyncConfig} from "./config/typeorm.config";
+import {GraphQLModule} from "@nestjs/graphql";
+import {ApolloDriverConfig} from "@nestjs/apollo";
+import {GraphQLConfig} from "./config/graphql.config";
+import {CustomerModule} from "./customer/customer.module";
 
 @Module({
   imports: [
       ConfigModule.forRoot({
           isGlobal: true,
       }),
-      TypeOrmModule.forRootAsync(typeOrmAsyncConfig)
+      TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+      GraphQLModule.forRoot<ApolloDriverConfig>(GraphQLConfig),
+      CustomerModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

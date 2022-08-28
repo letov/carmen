@@ -13,8 +13,8 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DATABASE,
-            entities: ['./dist/**/*.entity.js'],
-            logging: true,
+            entities: ['./dist/**/*.model.js'],
+            logging: false,
             synchronize: true,
         };
     }
