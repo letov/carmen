@@ -2,21 +2,48 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Customer {
+type CustomerModel {
   id: Float!
   name: String!
   phone: String!
 }
 
+type LoyaltyDiscountModel {
+  id: Float!
+  meetCount: Float!
+  discount: Float!
+}
+
+type LoyaltyCustomerModel {
+  id: Float!
+  discount: LoyaltyDiscountModel!
+  customer: CustomerModel!
+}
+
 type Query {
-  customers: [Customer!]!
+  customer(id: Float!): CustomerModel!
+  customers: [CustomerModel!]!
+  discounts: [LoyaltyDiscountModel!]!
+  customerDiscount(customerId: Float!): LoyaltyCustomerModel!
 }
 
 type Mutation {
-  createCustomer(customerInput: CustomerInput!): Customer!
+  createCustomer(customerInput: CustomerInput!): CustomerModel!
+  createDiscount(loyaltyDiscountInput: LoyaltyDiscountInput!): LoyaltyDiscountModel!
+  addDiscountToCustomer(loyaltyCustomerInput: LoyaltyCustomerInput!): LoyaltyDiscountModel!
 }
 
 input CustomerInput {
   name: String!
   phone: String!
+}
+
+input LoyaltyDiscountInput {
+  meetCount: Float!
+  discount: Float!
+}
+
+input LoyaltyCustomerInput {
+  discountId: Float!
+  customerId: Float!
 }
