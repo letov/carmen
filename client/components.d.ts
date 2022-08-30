@@ -19,6 +19,9 @@ declare module '@vue/runtime-core' {
     VanButton: typeof import('vant/es')['Button']
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']
+    VanIcon: typeof import('vant/es')['Icon']
+    VanImage: typeof import('vant/es')['Image']
+    VanNavBar: typeof import('vant/es')['NavBar']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }

@@ -1,24 +1,42 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 
+const route = useRoute();
+const rootPath = import.meta.env.VITE_ADMIN_PANEL_ROOT;
+const subMenu = route.matched[0].children;
 </script>
 
 <template>
-  <div class="whole_page">
+  <div v-if="route.path === `/${rootPath}`">
+    <h3 class="title">Меню</h3>
     <van-cell-group inset>
-      <van-cell title="Vue Router" is-link to="index" />
+      <van-cell
+          v-for="item in subMenu"
+          :key="item.path"
+          :title="item.name"
+          :to="`/${rootPath}/${item.path}`"
+          is-link
+      />
     </van-cell-group>
   </div>
+  <router-view />
 </template>
 
+<style>
+body {
+  background-color: #f7f8fa;
+}
+.van-cell {
+  align-items: center;
+}
+</style>
 <style scoped>
-.whole_page {
-  position: fixed;
-  padding: 0;
+.title {
   margin: 0;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #f7f8fa;
+  padding: 16px 16px 16px;
+  color: rgba(69,90,100,.6);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
 }
 </style>
