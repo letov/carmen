@@ -1,4 +1,4 @@
-import {CustomerModel} from "./customer.model";
+import {Customer} from "./customer.model";
 import {Args, Mutation, Query, Resolver} from "@nestjs/graphql";
 import {CustomerService} from "./customer.service";
 import {CustomerInput} from "./customer.dto";
@@ -8,20 +8,20 @@ export class CustomerResolver {
     constructor(
         private customerService: CustomerService,
     ) { }
-    @Query(() => CustomerModel)
+    @Query(() => Customer)
     async customer(
         @Args('id') id: number,
-    ): Promise<CustomerModel> {
+    ): Promise<Customer> {
         return await this.customerService.getById(id);
     }
-    @Query(() => [CustomerModel])
-    async customers(): Promise<CustomerModel[]> {
+    @Query(() => [Customer])
+    async customers(): Promise<Customer[]> {
         return await this.customerService.getAll();
     }
-    @Mutation(() => CustomerModel)
+    @Mutation(() => Customer)
     async createCustomer(
         @Args('customerInput') customerInput: CustomerInput,
-    ): Promise<CustomerModel> {
+    ): Promise<Customer> {
         return await this.customerService.create(customerInput)
     }
 }

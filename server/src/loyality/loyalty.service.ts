@@ -1,29 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from "@nestjs/typeorm";
-import { LoyaltyDiscountModel } from "./loyalty-discount.model";
-import { LoyaltyCustomerModel } from "./loyalty-customer.model";
-import { CustomerModel } from "../customer/customer.model";
+import { LoyaltyDiscount } from "./loyalty-discount.model";
+import { LoyaltyCustomer } from "./loyalty-customer.model";
+import { Customer } from "../customer/customer.model";
 import { LoyaltyDiscountInput } from "./loyalty-discount.dto";
 import { LoyaltyCustomerInput } from "./loyalty-customer.dto";
 
 @Injectable()
 export class LoyaltyService {
     constructor(
-        @InjectRepository(LoyaltyDiscountModel)
-        private loyaltyDiscountRepository: Repository<LoyaltyDiscountModel>,
-        @InjectRepository(LoyaltyCustomerModel)
-        private loyaltyCustomerRepository: Repository<LoyaltyCustomerModel>,
-        @InjectRepository(CustomerModel)
-        private customerRepository: Repository<CustomerModel>,
+        @InjectRepository(LoyaltyDiscount)
+        private loyaltyDiscountRepository: Repository<LoyaltyDiscount>,
+        @InjectRepository(LoyaltyCustomer)
+        private loyaltyCustomerRepository: Repository<LoyaltyCustomer>,
+        @InjectRepository(Customer)
+        private customerRepository: Repository<Customer>,
     ) {}
-    createDiscount(loyaltyDiscountInput: LoyaltyDiscountInput): Promise<LoyaltyDiscountModel> {
+    createDiscount(loyaltyDiscountInput: LoyaltyDiscountInput): Promise<LoyaltyDiscount> {
         return this.loyaltyDiscountRepository.save(loyaltyDiscountInput);
     }
-    getAllDiscounts(): Promise<LoyaltyDiscountModel[]> {
+    getAllDiscounts(): Promise<LoyaltyDiscount[]> {
         return this.loyaltyDiscountRepository.find();
     }
-    async addDiscountToCustomer(loyaltyCustomerInput: LoyaltyCustomerInput): Promise<LoyaltyCustomerModel> {
+    async addDiscountToCustomer(loyaltyCustomerInput: LoyaltyCustomerInput): Promise<LoyaltyCustomer> {
         const {discountId, customerId} = loyaltyCustomerInput;
         const discount = await this.loyaltyDiscountRepository.findOne({
             where: { id: discountId }
@@ -37,12 +37,12 @@ export class LoyaltyService {
         if (null === customer) {
             throw new Error('customer not exists');
         }
-        const loyaltyCustomer = new LoyaltyCustomerModel();
+        const loyaltyCustomer = new LoyaltyCustomer();
         loyaltyCustomer.discount = discount;
         loyaltyCustomer.customer = customer;
         return this.loyaltyCustomerRepository.save(loyaltyCustomer);
     }
-    async getCustomerDiscount(customerId: number): Promise<LoyaltyCustomerModel | null> {
+    async getCustomerDiscount(customerId: number): Promise<LoyaltyCustomer | null> {
         const customer = await this.customerRepository.findOne({
             where: {id: customerId}
         })

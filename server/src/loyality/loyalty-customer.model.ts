@@ -1,20 +1,20 @@
 import { PrimaryGeneratedColumn, Entity, OneToOne, JoinColumn } from "typeorm"
 import { ObjectType, Field } from '@nestjs/graphql';
-import { LoyaltyDiscountModel } from "./loyalty-discount.model";
-import { CustomerModel } from "../customer/customer.model";
+import { LoyaltyDiscount } from "./loyalty-discount.model";
+import { Customer } from "../customer/customer.model";
 
 @ObjectType()
-@Entity('loyalty_customer')
-export class LoyaltyCustomerModel {
+@Entity()
+export class LoyaltyCustomer {
     @Field()
     @PrimaryGeneratedColumn()
     id: number;
     @Field()
-    @OneToOne(() => LoyaltyDiscountModel)
-    @JoinColumn({ name: 'discount_id' })
-    discount: LoyaltyDiscountModel
+    @OneToOne(() => LoyaltyDiscount)
+    @JoinColumn()
+    discount: LoyaltyDiscount
     @Field()
-    @OneToOne(() => CustomerModel)
-    @JoinColumn({ name: 'customer_id' })
-    customer: CustomerModel
+    @OneToOne(() => Customer)
+    @JoinColumn()
+    customer: Customer
 }

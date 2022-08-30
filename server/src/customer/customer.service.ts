@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {CustomerModel} from "./customer.model";
+import {Customer} from "./customer.model";
 import { Repository } from 'typeorm';
 import { InjectRepository } from "@nestjs/typeorm";
 import {CustomerInput} from "./customer.dto";
@@ -9,19 +9,19 @@ import {localeConfig} from "../config/locale.config";
 @Injectable()
 export class CustomerService {
     constructor(
-        @InjectRepository(CustomerModel)
-        private customerRepository: Repository<CustomerModel>,
+        @InjectRepository(Customer)
+        private customerRepository: Repository<Customer>,
     ) {}
-    create(customerInput: CustomerInput): Promise<CustomerModel>{
+    create(customerInput: CustomerInput): Promise<Customer>{
         customerInput.phone = this.normalizePhone(customerInput.phone);
         return this.customerRepository.save(customerInput);
     }
-    getById(id: number): Promise<CustomerModel | null> {
+    getById(id: number): Promise<Customer | null> {
         return this.customerRepository.findOne({
             where: { id }
         });
     }
-    getAll(): Promise<CustomerModel[]> {
+    getAll(): Promise<Customer[]> {
         return this.customerRepository.find();
     }
     private normalizePhone(phoneNumber: string): string | null {

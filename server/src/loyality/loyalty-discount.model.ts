@@ -2,13 +2,13 @@ import { PrimaryGeneratedColumn, Entity, Column } from "typeorm"
 import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
-@Entity('loyalty_discount')
-export class LoyaltyDiscountModel {
+@Entity()
+export class LoyaltyDiscount {
     @Field()
     @PrimaryGeneratedColumn()
     id: number;
     @Field()
-    @Column({ name: "meet_count", unique: true })
+    @Column({ unique: true })
     meetCount: number;
     @Field()
     @Column()

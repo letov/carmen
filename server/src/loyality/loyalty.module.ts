@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 import { LoyaltyService } from "./loyalty.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { LoyaltyResolver } from "./loyalty.resolver";
-import { LoyaltyCustomerModel } from "./loyalty-customer.model";
-import { LoyaltyDiscountModel } from "./loyalty-discount.model";
-import { CustomerModel } from "../customer/customer.model";
+import { LoyaltyCustomer } from "./loyalty-customer.model";
+import { LoyaltyDiscount } from "./loyalty-discount.model";
+import { Customer } from "../customer/customer.model";
 
 @Module({
     imports: [TypeOrmModule.forFeature([
-        LoyaltyCustomerModel,
-        LoyaltyDiscountModel,
-        CustomerModel
+        LoyaltyCustomer,
+        LoyaltyDiscount,
+        Customer
     ])],
     providers: [LoyaltyService, LoyaltyResolver],
 })
