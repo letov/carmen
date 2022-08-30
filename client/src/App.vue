@@ -1,13 +1,7 @@
-<template>
-  <div id="app">
-    <v-app>
-      <router-view/>
-    </v-app>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'App'
-}
+<script setup lang="ts">
+import { RouterLink, RouterView } from "vue-router";
 </script>
+
+<template>
+  <RouterView />
+</template>
