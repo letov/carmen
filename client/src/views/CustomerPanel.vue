@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-const pageTitle = useRoute().name;
-const onClickLeft = () => history.back();
+  import { useRoute } from 'vue-router'
+  const pageTitle = useRoute().name;
+  const onClickLeft = () => history.back();
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const onClickLeft = () => history.back();
           />
           <div>
             <span>Екатерина</span>
-            <div class="van-cell__label">+7963665523</div>
+            <div class="clients__phone">+7963665523</div>
           </div>
         </div>
       </template>
@@ -40,14 +40,20 @@ const onClickLeft = () => history.back();
 </template>
 
 <style scoped>
-.clients {
-  margin-top: 15px;
-}
-.clients__avatar {
-  vertical-align: middle;
-}
-.clients__title {
-  display: flex;
-  gap: 15px;
-}
+  .clients {
+    margin-top: 15px;
+  }
+  .clients__avatar {
+    vertical-align: middle;
+  }
+  .clients__title {
+    display: flex;
+    gap: 15px;
+  }
+  .clients__phone {
+    margin-top: var(--van-cell-label-margin-top);
+    color: var(--van-cell-label-color);
+    font-size: var(--van-cell-label-font-size);
+    line-height: var(--van-cell-label-line-height);
+  }
 </style>

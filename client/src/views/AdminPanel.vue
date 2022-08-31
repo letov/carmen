@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+  import { useRoute } from 'vue-router'
+  import { useCustomerStore } from "@/store/useCustomer";
 
-const route = useRoute();
-const rootPath = import.meta.env.VITE_ADMIN_PANEL_ROOT;
-const subMenu = route.matched[0].children;
+  const route = useRoute();
+  const rootPath = import.meta.env.VITE_ADMIN_PANEL_ROOT;
+  const subMenu = route.matched[0].children;
+
+  const customerStore = useCustomerStore();
+  customerStore.fetchCustomers();
+  console.log(customerStore.customers);
 </script>
 
 <template>
@@ -23,20 +28,21 @@ const subMenu = route.matched[0].children;
 </template>
 
 <style>
-body {
-  background-color: #f7f8fa;
-}
-.van-cell {
-  align-items: center;
-}
+  body {
+    background-color: #f7f8fa;
+  }
+  .van-cell {
+    align-items: center;
+  }
 </style>
+
 <style scoped>
-.title {
-  margin: 0;
-  padding: 16px 16px 16px;
-  color: rgba(69,90,100,.6);
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
-}
+  .title {
+    margin: 0;
+    padding: 16px 16px 16px;
+    color: rgba(69,90,100,.6);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+  }
 </style>
