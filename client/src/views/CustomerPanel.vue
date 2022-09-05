@@ -1,59 +1,42 @@
 <script setup lang="ts">
-  import { useRoute } from 'vue-router'
-  const pageTitle = useRoute().name;
-  const onClickLeft = () => history.back();
+import { ref, watch } from "vue";
+
+  const props = defineProps({
+    customerIdInput: String,
+  })
+  import PageHeaderNavigation from "@/components/PageHeaderNavigation.vue";
+  import { storeToRefs } from "pinia";
+  import { useCustomerStore } from "@/store/useCustomer";
+  import { Customer, CustomerDTO } from "@/store/Customer";
+
+  const customerId = ref(props.customerIdInput);
+  const { customer, loading } = storeToRefs(useCustomerStore());
+  const isNewUser = () => customer.value.id === null;
+  const { fetchCustomer } = useCustomerStore();
+  fetchCustomer(Number(customerId.value));
+
+  const editCustomer = ref(new CustomerDTO());
+  watch(customer, (value) => {
+    editCustomer.value = new Customer(value);
+  }, { deep: true });
+
 </script>
-
 <template>
-  <van-nav-bar
-      :title="pageTitle"
-      left-text="Назад"
-      left-arrow
-      @click-left="onClickLeft"
-  >
-    <template #right>
-      <van-icon name="plus" />
-    </template>
-  </van-nav-bar>
-  <van-cell-group class="clients" inset>
-    <van-cell
-        is-link
-    >
-      <template #title>
-        <div class="clients__title">
-          <van-image
-              class="clients__avatar"
-              round
-              width="50px"
-              height="50px"
-              fit="cover"
-              src="https://katemojeikis.com/img/portfolio/main.jpg"
-          />
-          <div>
-            <span>Екатерина</span>
-            <div class="clients__phone">+7963665523</div>
-          </div>
-        </div>
-      </template>
-    </van-cell>
-  </van-cell-group>
-</template>
+  <div>
+    {{ editCustomer }}
+    <PageHeaderNavigation
+        :title="isNewUser() ? 'Добавление нового клиента' : customer.name"
+    />
 
-<style scoped>
-  .clients {
-    margin-top: 15px;
-  }
-  .clients__avatar {
-    vertical-align: middle;
-  }
-  .clients__title {
-    display: flex;
-    gap: 15px;
-  }
-  .clients__phone {
-    margin-top: var(--van-cell-label-margin-top);
-    color: var(--van-cell-label-color);
-    font-size: var(--van-cell-label-font-size);
-    line-height: var(--van-cell-label-line-height);
-  }
-</style>
+    <div v-if="loading" class="loading">
+      <van-loading type="spinner" />
+    </div>
+
+    <div v-else>
+      <van-cell-group inset>
+        <van-field v-model="editCustomer.name" label="Имя" />
+        <van-field v-model="editCustomer.phone" type="tel" label="Телефон" />
+      </van-cell-group>
+    </div>
+  </div>
+</template>

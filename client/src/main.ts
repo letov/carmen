@@ -4,6 +4,7 @@ import router from "./router";
 import { createPinia } from "pinia";
 import apolloClient from "@/plugins/apollo";
 import { createApolloProvider } from "@vue/apollo-option";
+import { Dialog } from 'vant';
 
 createApp(App)
     .use(createPinia())
@@ -11,4 +12,5 @@ createApp(App)
         defaultClient: apolloClient,
     }))
     .use(router)
+    .use(Dialog)
     .mount("#app");

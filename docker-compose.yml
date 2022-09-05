@@ -1,0 +1,67 @@
+version: "3.7"
+
+services:
+
+  db:
+    image: postgres
+    container_name: carmen-db
+    restart: always
+    env_file: server/.env
+    networks:
+      carmen-network:
+        ipv4_address: "${POSTGRES_HOST}"
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  nodejs:
+    build:
+      context: .
+      dockerfile: ./docker/nodejs/Dockerfile
+    container_name: carmen-nodejs
+    depends_on:
+      - db
+    restart: always
+    env_file: server/.env
+    ports:
+      - "${SERVER_APP_PORT}:${SERVER_APP_PORT}"
+    networks:
+      carmen-network:
+        ipv4_address: 172.20.10.12
+    volumes:
+      - client-dist-data:/client/dist
+
+  nginx:
+    image: nginx:1.23.0
+    container_name: carmen-nginx
+    depends_on:
+      - nodejs
+    restart: always
+    networks:
+      carmen-network:
+        ipv4_address: 172.20.10.10
+    env_file: server/.env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/templates:/etc/nginx/templates:ro
+      - client-dist-data:/client
+
+networks:
+  carmen-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.10.0/24
+
+volumes:
+  client-dist-data:
+  db-data:
+    driver: local

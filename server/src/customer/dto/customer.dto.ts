@@ -1,6 +1,6 @@
 import {IsPhoneNumber, Length} from "class-validator";
 import {Field, InputType} from "@nestjs/graphql";
-import {localeConfig} from "../config/locale.config";
+import {localeConfig} from "../../config/locale.config";
 import {CountryCode} from "libphonenumber-js";
 
 @InputType()
