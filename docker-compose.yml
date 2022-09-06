@@ -6,7 +6,7 @@ services:
     image: postgres
     container_name: carmen-db
     restart: always
-    env_file: server/.env
+    env_file: ./server/src/config/env/production.env
     networks:
       carmen-network:
         ipv4_address: "${POSTGRES_HOST}"
@@ -20,6 +20,18 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  redis:
+    image: redis
+    container_name: carmen-redis
+    networks:
+      carmen-network:
+        ipv4_address: "${REDIS_HOST}"
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    restart: always
+    volumes:
+      - redis-cache-data:/data
+
   nodejs:
     build:
       context: .
@@ -27,8 +39,9 @@ services:
     container_name: carmen-nodejs
     depends_on:
       - db
+      - redis
     restart: always
-    env_file: server/.env
+    env_file: ./server/src/config/env/production.env
     ports:
       - "${SERVER_APP_PORT}:${SERVER_APP_PORT}"
     networks:
@@ -46,7 +59,7 @@ services:
     networks:
       carmen-network:
         ipv4_address: 172.20.10.10
-    env_file: server/.env
+    env_file: ./server/src/config/env/production.env
     ports:
       - "80:80"
       - "443:443"
@@ -62,6 +75,10 @@ networks:
         - subnet: 172.20.10.0/24
 
 volumes:
+  redis-cache-data:
+    name: carmen-redis-cache-data
   client-dist-data:
+    name: carmen-client-dist-data
   db-data:
+    name: carmen-db-data
     driver: local

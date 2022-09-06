@@ -1,6 +1,5 @@
 import {ApolloDriver} from "@nestjs/apollo";
 import {GraphQLError, GraphQLFormattedError} from "graphql/error";
-import {isUndefined} from "@nestjs/common/utils/shared.utils";
 
 const REQUEST_EXCEPTION_CODE = 'BAD_USER_INPUT';
 

@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
-import {Customer} from "./customer.model";
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Customer } from "./customer.model";
 import { Repository, ILike } from 'typeorm';
 import { InjectRepository } from "@nestjs/typeorm";
-import {CustomerInput} from "./dto/customer.dto";
+import { CustomerInput } from "./dto/customer.dto";
 import phone from "phone";
-import {localeConfig} from "../config/locale.config";
+import { localeConfig } from "../config/locale.config";
 import { FetchCustomersPaginationArgs } from "./dto/fetch-customers-pagination-args.dto";
 import { FetchCustomersPagination } from "./dto/fetch-customers-pagination.dto";
-import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
+import { Cache } from "cache-manager";
 
 @Injectable()
 export class CustomerService {
     constructor(
         @InjectRepository(Customer)
         private customerRepository: Repository<Customer>,
+        @Inject(CACHE_MANAGER)
+        private cacheManager: Cache,
     ) {}
-    create(customer: CustomerInput): Promise<Customer>{
+    async clearCustomerListCache() {
+        await this.cacheManager.store.del(
+            await this.cacheManager.store.keys('customer:findAll:*')
+        );
+    }
+    async create(customer: CustomerInput): Promise<Customer> {
+        await this.clearCustomerListCache();
         customer.phone = this.normalizePhone(customer.phone);
         return this.customerRepository.save(customer);
     }
     findById(id: number): Promise<Customer | null> {
         return this.customerRepository.findOne({
+            cache: {
+                id: `customer:findById:${id}`,
+                milliseconds: Number(process.env.REDIS_DEFAULT_TTL),
+            },
             where: { id }
         });
     }
@@ -31,19 +43,25 @@ export class CustomerService {
                 where[filter] = ILike(`%${args[filter]}%`);
             }
         }
+        args.take = args.take ?? 10;
+        args.skip = args.skip ?? 0;
         return this.customerRepository
             .findAndCount({
-                take: args.take ?? 10,
-                skip: args.skip ?? 0,
+                cache: {
+                    id: `customer:findAll:${JSON.stringify(args)}`,
+                    milliseconds: Number(process.env.REDIS_DEFAULT_TTL),
+                },
+                take: args.take,
+                skip: args.skip,
                 order: {
                     name: "ASC"
                 },
                 where
             })
             .then(result => {
-            const [customers, total] = result;
-            return new FetchCustomersPagination(customers, total);
-        });
+                const [customers, total] = result;
+                return new FetchCustomersPagination(customers, total);
+            });
     }
     private normalizePhone(phoneNumber: string): string | null {
         const result = phone(phoneNumber, {country: localeConfig.region}).phoneNumber;

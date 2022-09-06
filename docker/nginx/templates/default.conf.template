@@ -1,5 +1,5 @@
 server {
-    server_name ${HOST};
+    server_name ${APP_HOST};
     root /client;
     listen 80;
     index index.html;
