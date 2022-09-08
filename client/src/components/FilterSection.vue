@@ -4,7 +4,7 @@ const emit = defineEmits(['submit-filters', 'clear-filters']);
 
 <template>
     <slot name="fields" />
-    <div class="buttons">
+    <div class="buttons-group">
       <van-button round plain type="primary" @click="emit('submit-filters')">
         Применить
       </van-button>
@@ -13,11 +13,3 @@ const emit = defineEmits(['submit-filters', 'clear-filters']);
       </van-button>
     </div>
 </template>
-
-<style scoped>
-  .buttons {
-    display: flex;
-    margin: 16px;
-    gap: 16px;
-  }
-</style>

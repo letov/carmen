@@ -2,14 +2,12 @@ export interface ICustomer {
     id: number | null;
     name: string;
     phone: string;
-    test(): string;
 }
 
 export class CustomerDTO implements ICustomer {
     id: number | null = null;
     name: string = '';
     phone: string = '';
-    test = () => { return this.name; }
 }
 
 export class Customer extends CustomerDTO {
@@ -17,5 +15,11 @@ export class Customer extends CustomerDTO {
         super();
         Object.assign(this, dto);
     }
-    test = () => { return this.name; }
+}
+
+export class CustomerInput {
+    constructor(customer: ICustomer) {
+        const { id, ..._customer} = customer;
+        Object.assign(this, _customer);
+    }
 }

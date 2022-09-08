@@ -11,21 +11,34 @@ export class CustomerResolver {
         private customerService: CustomerService,
     ) { }
     @Query(() => Customer)
-    async customer(
+    customer(
         @Args('id') id: number,
     ): Promise<Customer> {
-        return await this.customerService.findById(id);
+        return this.customerService.findById(id);
     }
     @Query(() => FetchCustomersPagination)
-    async customersPagination(
+    customersPagination(
         @Args() args: FetchCustomersPaginationArgs
     ): Promise<FetchCustomersPagination> {
-        return await this.customerService.findAll(args);
+        return this.customerService.findAll(args);
     }
     @Mutation(() => Customer)
-    async createCustomer(
+    createCustomer(
         @Args('customerInput') customer: CustomerInput,
     ): Promise<Customer> {
-        return await this.customerService.create(customer)
+        return this.customerService.save(customer)
+    }
+    @Mutation(() => Boolean)
+    updateCustomer(
+        @Args('id') id: number,
+        @Args('customerInput') customer: CustomerInput,
+    ): Promise<Boolean> {
+        return this.customerService.update(id, customer)
+    }
+    @Mutation(() => Boolean)
+    deleteCustomer(
+        @Args('id') id: number,
+    ): Promise<Boolean> {
+        return this.customerService.delete(id);
     }
 }

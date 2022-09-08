@@ -7,11 +7,13 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    FilterSection: typeof import('./src/components/filter/FilterSection.vue')['default']
+    AdminMenu: typeof import('./src/views/AdminMenu.vue')['default']
+    FilterSection: typeof import('./src/components/FilterSection.vue')['default']
     PageHeaderNavigation: typeof import('./src/components/PageHeaderNavigation.vue')['default']
     PaginationSection: typeof import('./src/components/pagination/PaginationSection.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Swipe: typeof import('./src/components/Swipe.vue')['default']
     VanButton: typeof import('vant/es')['Button']
     VanCard: typeof import('vant/es')['Card']
     VanCell: typeof import('vant/es')['Cell']
@@ -21,6 +23,8 @@ declare module '@vue/runtime-core' {
     VanLoading: typeof import('vant/es')['Loading']
     VanNavBar: typeof import('vant/es')['NavBar']
     VanPagination: typeof import('vant/es')['Pagination']
+    VanSwipe: typeof import('vant/es')['Swipe']
     VanSwipeCell: typeof import('vant/es')['SwipeCell']
+    VanSwipeItem: typeof import('vant/es')['SwipeItem']
   }
 }

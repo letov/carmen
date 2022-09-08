@@ -13,7 +13,6 @@ const emit = defineEmits(['change-pagination']);
 </script>
 
 <template>
-
   <div class="pagination">
     <van-pagination
         v-model="currentPage"
@@ -21,12 +20,15 @@ const emit = defineEmits(['change-pagination']);
         :total-items="itemsTotalInput"
         @change="emit('change-pagination', currentPage)"
     >
+
       <template #prev-text>
         <van-icon name="arrow-left" />
       </template>
+
       <template #next-text>
         <van-icon name="arrow" />
       </template>
+
     </van-pagination>
   </div>
 </template>

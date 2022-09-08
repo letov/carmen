@@ -17,15 +17,26 @@ export class CustomerService {
         @Inject(CACHE_MANAGER)
         private cacheManager: Cache,
     ) {}
-    async clearCustomerListCache() {
-        await this.cacheManager.store.del(
-            await this.cacheManager.store.keys('customer:findAll:*')
-        );
+    save(customer: CustomerInput): Promise<Customer> {
+        return this.clearCustomerListCache()
+            .then(() => {
+                customer.phone = this.normalizePhone(customer.phone);
+                return this.customerRepository.save(customer);
+            })
     }
-    async create(customer: CustomerInput): Promise<Customer> {
-        await this.clearCustomerListCache();
-        customer.phone = this.normalizePhone(customer.phone);
-        return this.customerRepository.save(customer);
+    update(id: number, customer: CustomerInput): Promise<Boolean> {
+        return this.clearCustomerListCache()
+            .then(() => this.clearCustomerCache(id))
+            .then(() => {
+                customer.phone = this.normalizePhone(customer.phone);
+                return this.customerRepository.update({id}, customer);
+            })
+            .then((response) => response.affected !== 0);
+    }
+    delete(id: number): Promise<Boolean> {
+        return this.clearCustomerListCache()
+            .then(() => this.customerRepository.delete(id))
+            .then((response) => response.affected !== 0);
     }
     findById(id: number): Promise<Customer | null> {
         return this.customerRepository.findOne({
@@ -69,5 +80,21 @@ export class CustomerService {
             throw new Error(`Invalid phone number: ${phoneNumber}`);
         }
         return result;
+    }
+    private clearCustomerListCache() {
+        return this.cacheManager.store.keys('customer:findAll:*')
+            .then((response) => {
+                if (response.length > 0) {
+                    this.cacheManager.store.del(response);
+                }
+            });
+    }
+    private clearCustomerCache(id: number) {
+        return this.cacheManager.store.keys(`customer:findById:${id}`)
+            .then((response) => {
+                if (response.length > 0) {
+                    this.cacheManager.store.del(response);
+                }
+            });
     }
 }

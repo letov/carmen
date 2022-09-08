@@ -3,7 +3,9 @@ const props = defineProps({
   title: String,
 });
 
-const onClickLeft = () => history.back();
+const onClickLeft = () => {
+  history.back();
+}
 </script>
 
 <template>
@@ -13,7 +15,13 @@ const onClickLeft = () => history.back();
       left-text="Назад"
       left-arrow
       @click-left="onClickLeft"
-  />
+  >
+
+    <template #right>
+      <slot name="right"/>
+    </template>
+
+  </van-nav-bar>
 </template>
 
 <style scoped>

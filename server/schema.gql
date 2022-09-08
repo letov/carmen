@@ -34,6 +34,8 @@ type Query {
 
 type Mutation {
   createCustomer(customerInput: CustomerInput!): Customer!
+  updateCustomer(id: Float!, customerInput: CustomerInput!): Boolean!
+  deleteCustomer(id: Float!): Boolean!
   createDiscount(loyaltyDiscountInput: LoyaltyDiscountInput!): LoyaltyDiscount!
   addDiscountToCustomer(loyaltyCustomerInput: LoyaltyCustomerInput!): LoyaltyDiscount!
 }

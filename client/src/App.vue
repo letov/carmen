@@ -16,23 +16,10 @@ import { RouterView } from "vue-router";
     display: flex;
   }
 
-  .slide-enter-active {
-    transition: 0.5s;
-  }
-  .slide-enter-from {
-    transform: translate(100%, 0);
-  }
-  .slide-enter-to {
-    transform: translate(0, 0);
-  }
-
-  .enter-parent-animation.slide-enter-active {
-    transition: 0.5s;
-  }
-  .enter-parent-animation.slide-enter-from {
-    transform: translate(-100%, 0);
-  }
-  .enter-parent-animation.slide-enter-to {
-    transform: translate(0, 0);
+  .buttons-group {
+    display: flex;
+    margin: 16px;
+    gap: 16px;
+    justify-content: center;
   }
 </style>

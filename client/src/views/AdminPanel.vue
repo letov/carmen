@@ -1,40 +1,90 @@
 <script setup lang="ts">
-  import { useRoute } from 'vue-router'
-  import 'vant/es/dialog/style';
+import router from "@/router";
+import { ref } from "vue";
 
-  const route = useRoute();
-  const rootPath = import.meta.env.VITE_ADMIN_PANEL_ROOT;
-  const subMenu = route.matched[0].children;
-  const isRootPath = () => route.path === '/' + rootPath;
+const transitionName = ref('slide-right');
+router.afterEach((to, from) => {
+  if (to.name === "menu") {
+    transitionName.value = 'slide-right';
+    return;
+  }
+  const toDepth = to.path.split('/').length
+  const fromDepth = from.path.split('/').length
+  transitionName.value = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+})
 </script>
 
 <template>
-
-  <transition name="slide">
-    <div class="enter-parent-animation" v-if="isRootPath()">
-      <van-nav-bar class="navigation-bar" :title="route.meta.title" />
-      <van-cell-group inset>
-        <van-cell
-            v-for="item in subMenu"
-            :key="item.path"
-            :title="item.meta.title"
-            :to="`/${rootPath}/${item.path}`"
-            is-link
-        />
-      </van-cell-group>
-    </div>
-  </transition>
-
   <router-view v-slot="{ Component }">
-    <transition name="slide">
+    <transition :name="transitionName">
       <component :is="Component" />
     </transition>
   </router-view>
-
 </template>
 
-<style scoped>
-  .navigation-bar {
-    margin-bottom: 15px;
-  }
+<style lang="less">
+
+.wrapper {
+  width: 100%;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: 0.5s;
+}
+
+.hide-at-right() {
+  position: absolute;
+  transform: translate(100%, 0);
+}
+
+.show-from-right() {
+  transform: translate(0, 0);
+}
+
+.hide-at-left() {
+  position: absolute;
+  transform: translate(-100%, 0);
+}
+
+.show-from-left() {
+  transform: translate(0, 0);
+}
+
+// slide-left
+
+.slide-left-enter-to {
+  .show-from-right()
+}
+
+.slide-left-enter-from {
+  .hide-at-right()
+}
+
+.slide-left-leave-to {
+  .hide-at-left()
+}
+.slide-left-leave-from {
+  .show-from-left()
+}
+
+// slide-right
+
+.slide-right-enter-to {
+  .show-from-left()
+}
+
+.slide-right-enter-from {
+  .hide-at-left()
+}
+
+.slide-right-leave-to {
+  .hide-at-right()
+}
+.slide-right-leave-from {
+  .show-from-right()
+}
+
 </style>

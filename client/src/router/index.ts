@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import AdminPanel from "../views/AdminPanel.vue";
 import CustomerListPanel from "../views/CustomerListPanel.vue";
 import CustomerPanel from "../views/CustomerPanel.vue";
+import AdminMenu from "../views/AdminMenu.vue";
 const env = import.meta.env;
 
 const router = createRouter({
@@ -9,23 +10,40 @@ const router = createRouter({
   routes: [
     {
       path: `/${env.VITE_ADMIN_PANEL_ROOT}`,
-      name: "menu",
+      name: "admin-panel",
       component: AdminPanel,
-      meta: { title: "Панель администратора" },
+      meta: {
+        title: "Панель администратора",
+      },
+      redirect: to => {
+        return { name: 'menu'}
+      },
       children: [
+        {
+          path: `${env.VITE_ADMIN_PANEL_MENU}`,
+          name: "menu",
+          component: AdminMenu,
+          meta: {
+            title: "Меню",
+            hideInMenu: true,
+          },
+        },
         {
           path: `${env.VITE_ADMIN_PANEL_CUSTOMER}`,
           name: "customers",
           component: CustomerListPanel,
-          meta: { title: "Клиенты" },
-          children: [
-            {
-              path: `:customerIdInput`,
-              name: "customer",
-              component: CustomerPanel,
-              props: true
-            },
-          ],
+          meta: {
+            title: "Клиенты",
+          },
+        },
+        {
+          path: `${env.VITE_ADMIN_PANEL_CUSTOMER}/:customerIdInput`,
+          name: "customer",
+          component: CustomerPanel,
+          meta: {
+            hideInMenu: true,
+          },
+          props: true
         },
       ],
     },
