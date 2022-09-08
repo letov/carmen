@@ -12,7 +12,7 @@ import { cacheConfig } from "./config/cache.config";
 @Module({
   imports: [
       ConfigModule.forRoot({
-          envFilePath: `${process.cwd()}/src/config/env/${process.env.NODE_ENV}.env`,
+          envFilePath: `${process.cwd()}/src/config/env/.env.${process.env.NODE_ENV}.local`,
           isGlobal: true,
       }),
       TypeOrmModule.forRootAsync(typeOrmAsyncConfig),

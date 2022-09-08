@@ -6,7 +6,7 @@ services:
     image: postgres
     container_name: carmen-db
     restart: always
-    env_file: ./server/src/config/env/production.env
+    env_file: server/src/config/env/.env.production.local
     networks:
       carmen-network:
         ipv4_address: "${POSTGRES_HOST}"
@@ -41,7 +41,7 @@ services:
       - db
       - redis
     restart: always
-    env_file: ./server/src/config/env/production.env
+    env_file: server/src/config/env/.env.production.local
     ports:
       - "${SERVER_APP_PORT}:${SERVER_APP_PORT}"
     networks:
@@ -59,7 +59,7 @@ services:
     networks:
       carmen-network:
         ipv4_address: 172.20.10.10
-    env_file: ./server/src/config/env/production.env
+    env_file: server/src/config/env/.env.production.local
     ports:
       - "80:80"
       - "443:443"
