@@ -21,8 +21,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
             cache: {
                 type: "redis",
                 options: {
-                    host: process.env.REDIS_HOST,
-                    port: process.env.REDIS_PORT
+                    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
                 },
                 ignoreErrors: true
             },
