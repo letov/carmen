@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PageHeaderNavigation from "@/components/PageHeaderNavigation.vue";
 import FilterSection from "@/components/FilterSection.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import type { ICustomer } from "@/store/Customer";
 import { CustomerDTO } from "@/store/Customer";
@@ -13,6 +13,7 @@ import PaginationSection from "@/components/pagination/PaginationSection.vue";
 import { Dialog } from "vant";
 
 const route = useRoute();
+const router = useRouter();
 const filter = ref<ICustomer>(new CustomerDTO());
 const pagination = ref<IPagination>(new Pagination());
 const { customers, customersTotal, loading } = storeToRefs(useCustomerStore());
@@ -51,7 +52,7 @@ resetPagination();
         :title="route.meta.title"
     >
       <template #right>
-        <van-icon name="plus" @click="this.$router.push({path: newCustomerPath})" />
+        <van-icon name="plus" @click="router.push({path: newCustomerPath})" />
       </template>
     </PageHeaderNavigation>
 
@@ -93,7 +94,7 @@ resetPagination();
               :desc="customer.phone"
               class="clients__card"
               thumb="https://katemojeikis.com/img/portfolio/main.jpg"
-              @click="this.$router.push({name: `customer`,  params: { customerIdInput: customer.id }})"
+              @click="router.push({name: `customer`,  params: { customerIdInput: customer.id }})"
           />
           <template #right>
             <van-button
