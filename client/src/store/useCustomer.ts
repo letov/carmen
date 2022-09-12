@@ -5,7 +5,7 @@ import { Dialog } from "vant";
 import 'vant/es/dialog/style';
 import type { IPagination } from "@/components/pagination/Pagination";
 import type { ICustomer } from "@/store/Customer";
-import { Customer, CustomerDTO, CustomerInput } from "@/store/Customer";
+import { CustomerDTO, CustomerInput } from "@/store/Customer";
 
 const failDialog = (message: string) => {
     Dialog.alert({
@@ -30,12 +30,6 @@ export const useCustomerStore = defineStore('customer', {
             this.customers = [];
             this.customersTotal = 0;
             this.loading = true;
-            // @ts-ignore
-            // @ts-ignore
-            // @ts-ignore
-            // @ts-ignore
-            // @ts-ignore
-            // @ts-ignore
             apolloClient.query({
                 query: gql`
                     query GetCustomerPagination($skip: Int, $take: Int, $name: String, $phone: String) {
@@ -44,6 +38,7 @@ export const useCustomerStore = defineStore('customer', {
                                 id
                                 name
                                 phone
+                                image
                             }
                             total
                         }
@@ -61,6 +56,7 @@ export const useCustomerStore = defineStore('customer', {
                 this.customersTotal = data.customersPagination.total;
             })
             .catch(() => {})
+                // @ts-ignore
             .finally(() => {
                 this.loading = false;
             })
@@ -78,6 +74,7 @@ export const useCustomerStore = defineStore('customer', {
                             id
                             name
                             phone
+                            image
                         }
                     }
                 `,
@@ -89,6 +86,7 @@ export const useCustomerStore = defineStore('customer', {
                 this.customer = data.customer;
             })
             .catch(() => {})
+                // @ts-ignore
             .finally(() => {
                 this.loading = false;
             })
@@ -116,12 +114,12 @@ export const useCustomerStore = defineStore('customer', {
                 }
             })
             .catch(() => {})
+                // @ts-ignore
             .finally(() => {
                 this.loading = false;
             })
         },
-        createCustomer: function (customer: Customer) {
-            const { id, ...customerInput } = customer;
+        createCustomer: function (customer: ICustomer) {
             this.loading = true;
             return apolloClient.mutate({
                 mutation: gql`
@@ -132,7 +130,7 @@ export const useCustomerStore = defineStore('customer', {
                     }
                 `,
                 variables: {
-                    "customerInput": customerInput
+                    "customerInput": new CustomerInput(customer)
                 }
             })
             .then(({data}) => {
@@ -143,11 +141,12 @@ export const useCustomerStore = defineStore('customer', {
                 }
             })
             .catch(() => {})
+                // @ts-ignore
             .finally(() => {
                 this.loading = false;
             })
         },
-        updateCustomer: function (customer: Customer) {
+        updateCustomer: function (customer: ICustomer) {
             this.loading = true;
             return apolloClient.mutate({
                 mutation: gql`
@@ -164,11 +163,11 @@ export const useCustomerStore = defineStore('customer', {
                 if (!data.updateCustomer) {
                     failDialog('Пользователь не изменен');
                 } else {
-                    console.log('as')
                     return apolloClient.clearStore().then(() => true);
                 }
             })
             .catch(() => {})
+                // @ts-ignore
             .finally(() => {
                 this.loading = false;
             })

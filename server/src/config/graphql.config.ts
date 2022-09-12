@@ -5,10 +5,11 @@ const REQUEST_EXCEPTION_CODE = 'BAD_USER_INPUT';
 
 export const GraphQLConfig ={
     driver: ApolloDriver,
-    debug: true,
-    playground: true,
+    debug: process.env.NODE_ENV !== 'production',
+    playground: process.env.NODE_ENV !== 'production',
     autoSchemaFile: 'schema.gql',
     formatError: (error: GraphQLError) => {
+        console.log(error)
         let graphQLFormattedError: GraphQLFormattedError;
         if (REQUEST_EXCEPTION_CODE === error.extensions?.code) {
             graphQLFormattedError = { message: error.extensions?.response['message'].join('\n') };

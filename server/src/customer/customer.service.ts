@@ -1,5 +1,5 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
-import { Customer } from "./customer.model";
+import { Customer, ICustomer } from "./customer.model";
 import { Repository, ILike } from 'typeorm';
 import { InjectRepository } from "@nestjs/typeorm";
 import { CustomerInput } from "./dto/customer.dto";
@@ -8,6 +8,8 @@ import { localeConfig } from "../config/locale.config";
 import { FetchCustomersPaginationArgs } from "./dto/fetch-customers-pagination-args.dto";
 import { FetchCustomersPagination } from "./dto/fetch-customers-pagination.dto";
 import { Cache } from "cache-manager";
+import { FileService } from "../file/file.service";
+import * as path from "path";
 
 @Injectable()
 export class CustomerService {
@@ -16,21 +18,19 @@ export class CustomerService {
         private customerRepository: Repository<Customer>,
         @Inject(CACHE_MANAGER)
         private cacheManager: Cache,
+        @Inject(FileService)
+        private fileService: FileService,
     ) {}
-    save(customer: CustomerInput): Promise<Customer> {
+    save(customerInput: CustomerInput): Promise<Customer> {
         return this.clearCustomerListCache()
-            .then(() => {
-                customer.phone = this.normalizePhone(customer.phone);
-                return this.customerRepository.save(customer);
-            })
+            .then(() => this.convertCustomerInput(customerInput))
+            .then((customer) => this.customerRepository.save(customer));
     }
-    update(id: number, customer: CustomerInput): Promise<Boolean> {
+    update(id: number, customerInput: CustomerInput): Promise<Boolean> {
         return this.clearCustomerListCache()
             .then(() => this.clearCustomerCache(id))
-            .then(() => {
-                customer.phone = this.normalizePhone(customer.phone);
-                return this.customerRepository.update({id}, customer);
-            })
+            .then(() => this.convertCustomerInput(customerInput))
+            .then((customer) => this.customerRepository.update({ id }, customer))
             .then((response) => response.affected !== 0);
     }
     delete(id: number): Promise<Boolean> {
@@ -74,13 +74,28 @@ export class CustomerService {
                 return new FetchCustomersPagination(customers, total);
             });
     }
-    private normalizePhone(phoneNumber: string): string | null {
+    private async convertCustomerInput(customerInput: CustomerInput): Promise<ICustomer> {
+        let customer = new Customer();
+        Object.assign(customer, customerInput)
+        customer.phone = this.normalizePhone(customer.phone);
+        if ( customerInput.uploadImage ) {
+            customer.image = await this.fileService.uploadImage(customerInput.uploadImage)
+                .then((imagePath) => this.fileService.convertToPNG(imagePath))
+                .catch((errorMessage) => {
+                    throw new Error(errorMessage);
+                })
+                .then((imagePath) => path.basename(imagePath))
+        }
+        return customer;
+    }
+    private normalizePhone(phoneNumber: string): string {
         const result = phone(phoneNumber, {country: localeConfig.region}).phoneNumber;
         if (null === result) {
             throw new Error(`Invalid phone number: ${phoneNumber}`);
         }
         return result;
     }
+
     private clearCustomerListCache() {
         return this.cacheManager.store.keys('customer:findAll:*')
             .then((response) => {

@@ -8,6 +8,8 @@ import { GraphQLConfig } from "./config/graphql.config";
 import { CustomerModule} from "./customer/customer.module";
 import { LoyaltyModule } from "./loyality/loyalty.module";
 import { cacheConfig } from "./config/cache.config";
+import { FileModule } from "./file/file.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
   imports: [
@@ -20,6 +22,10 @@ import { cacheConfig } from "./config/cache.config";
       CacheModule.register(cacheConfig),
       CustomerModule,
       LoyaltyModule,
+      FileModule,
+      ServeStaticModule.forRoot({
+          rootPath: `${process.cwd()}/${process.env.UPLOAD_PATH}`,
+      }),
   ],
 })
 export class AppModule {}

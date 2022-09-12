@@ -5,6 +5,7 @@ import { storeToRefs } from "pinia";
 import { useCustomerStore } from "@/store/useCustomer";
 import { Customer, CustomerDTO } from "@/store/Customer";
 import { Dialog } from "vant";
+import type { UploaderFileListItem } from "vant/lib/uploader/types";
 
 const props = defineProps({
   customerIdInput: String,
@@ -13,6 +14,7 @@ const props = defineProps({
 const { fetchCustomer, deleteCustomer, createCustomer, updateCustomer } = useCustomerStore();
 const editedCustomer = ref(new CustomerDTO());
 const isNewUser = () => editedCustomer.value.id === null;
+const uploadFile = ref([]);
 
 fetchCustomer(Number(props.customerIdInput));
 const { customer, loading } = storeToRefs(useCustomerStore());
@@ -58,6 +60,29 @@ const _editCustomer = () => {
         });
   }
 }
+const validateMimeType = (mimetype: string): boolean => {
+  const validMimeTypes = import.meta.env.VITE_UPLOAD_VALID_MIME_TYPES.split(' ');
+  return validMimeTypes.includes(mimetype);
+}
+const beforeRead = (file: File) => {
+  if (!validateMimeType(file.type)) {
+    Dialog.alert({
+      message: 'Invalid file type',
+      confirmButtonText: 'OK',
+    });
+    return false;
+  }
+  return true;
+};
+const afterRead = (file: UploaderFileListItem) => {
+  editedCustomer.value.uploadImage = file.file;
+  file.status = 'uploading';
+  file.message = 'Загрузка...';
+  setTimeout(() => {
+    file.status = 'done';
+    file.message = '';
+  }, 1000);
+};
 </script>
 
 <template>
@@ -72,6 +97,9 @@ const _editCustomer = () => {
     </div>
 
     <div v-else>
+      <div class="avatar">
+        <van-uploader v-model="uploadFile" :before-read="beforeRead" :after-read="afterRead" :max-count="1"/>
+      </div>
       <van-cell-group inset>
         <van-field v-model="editedCustomer.name" label="Имя" />
         <van-field v-model="editedCustomer.phone" type="tel" label="Телефон" />
@@ -90,3 +118,10 @@ const _editCustomer = () => {
 
   </div>
 </template>
+
+<style scoped>
+.avatar {
+  padding: 10px 0px 20px;
+  text-align: center;
+}
+</style>

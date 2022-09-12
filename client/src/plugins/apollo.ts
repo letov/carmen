@@ -1,9 +1,11 @@
-import { ApolloClient, from, HttpLink, InMemoryCache } from "@apollo/client/core";
+import { ApolloClient, from, InMemoryCache } from "@apollo/client/core";
 import { onError } from "@apollo/client/link/error";
 import { Dialog } from "vant";
+import createUploadLink from "apollo-upload-client/public/createUploadLink";
 
-const httpLink = new HttpLink({
-    uri: import.meta.env.VITE_GRAPHQL_ENDPOINT,
+
+const uploadLink = createUploadLink({
+    uri: `${import.meta.env.VITE_SERVER_URL}/graphql`,
 });
 
 const failDialog = (message: string) => {
@@ -27,7 +29,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const appLink = from([
-    errorLink, httpLink
+    errorLink, uploadLink
 ])
 
 const apolloClient = new ApolloClient({

@@ -11,6 +11,7 @@ import { storeToRefs } from "pinia";
 import { useCustomerStore } from "@/store/useCustomer";
 import PaginationSection from "@/components/pagination/PaginationSection.vue";
 import { Dialog } from "vant";
+import { getCustomerAvatar } from "@/plugins/avatar"
 
 const route = useRoute();
 const router = useRouter();
@@ -93,9 +94,15 @@ resetPagination();
               :title="customer.name"
               :desc="customer.phone"
               class="clients__card"
-              thumb="https://katemojeikis.com/img/portfolio/main.jpg"
               @click="router.push({name: `customer`,  params: { customerIdInput: customer.id }})"
-          />
+          >
+            <template #thumb>
+              <van-image
+                  round
+                  :src="getCustomerAvatar(customer.image)"
+              />
+            </template>
+          </van-card>
           <template #right>
             <van-button
                 square

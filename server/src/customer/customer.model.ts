@@ -1,9 +1,16 @@
 import { PrimaryGeneratedColumn, Entity, Column } from "typeorm"
 import { ObjectType, Field } from '@nestjs/graphql';
 
+export interface ICustomer {
+    id: number;
+    name: string;
+    phone: string;
+    image: string;
+}
+
 @ObjectType()
 @Entity()
-export class Customer {
+export class Customer implements ICustomer {
     @Field()
     @PrimaryGeneratedColumn()
     id: number;
@@ -18,4 +25,9 @@ export class Customer {
         unique: true,
     })
     phone: string;
+    @Field({ nullable: true })
+    @Column({
+        nullable: true,
+    })
+    image: string;
 }
