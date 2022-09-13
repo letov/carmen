@@ -25,7 +25,7 @@ watch(customer, (value) => {
   editedCustomer.value = value ? new Customer(value) : new CustomerDTO();
   if (null !== editedCustomer.value.image) {
     uploadFile.value = [{
-      url: `${import.meta.env.VITE_SERVER_URL}/${editedCustomer.value.image}`
+      url: `${import.meta.env.VITE_SERVER_URL}/${import.meta.env.VITE_UPLOAD_PATH}/${editedCustomer.value.image}`
     }];
   }
 }, { deep: true });
@@ -88,6 +88,12 @@ const afterRead = (file: UploaderFileListItem) => {
     file.message = '';
   }, 1000);
 };
+const onOversize = (file: UploaderFileListItem) => {
+  Dialog.alert({
+    message: 'Maximum size of file is 15MB',
+    confirmButtonText: 'OK',
+  });
+};
 </script>
 
 <template>
@@ -105,10 +111,13 @@ const afterRead = (file: UploaderFileListItem) => {
       <div class="avatar">
         <van-uploader
             preview-size="300"
+            :preview-full-image="false"
             v-model="uploadFile"
             :before-read="beforeRead"
             :after-read="afterRead"
             :max-count="1"
+            :max-size="15 * 1024 * 1024"
+            @oversize="onOversize"
         />
       </div>
       <van-cell-group inset>

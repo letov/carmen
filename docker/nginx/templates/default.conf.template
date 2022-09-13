@@ -10,7 +10,11 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
+    location /upload/ {
+    }
+
     location /graphql {
+        client_max_body_size 16M;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
         proxy_pass http://nodejs:${SERVER_APP_PORT};

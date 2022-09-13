@@ -1,3 +1,8 @@
+docker stop \
+  postgres-db \
+& docker stop \
+  redis-cache
+
 (docker start \
   postgres-db \
 || docker run \

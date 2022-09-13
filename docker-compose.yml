@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
       - ./docker/db/migrations:/docker-entrypoint-initdb.d
 
   redis:
@@ -50,6 +50,7 @@ services:
         ipv4_address: 172.20.10.12
     volumes:
       - client-dist-data:/client/dist
+      - ./server/upload:/server/${UPLOAD_PATH}
 
   nginx:
     image: nginx:1.23.0
@@ -67,6 +68,7 @@ services:
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates:ro
       - client-dist-data:/client
+      - ./server/upload:/client/upload
 
 networks:
   carmen-network:
@@ -80,6 +82,3 @@ volumes:
     name: carmen-redis-cache-data
   client-dist-data:
     name: carmen-client-dist-data
-  db-data:
-    name: carmen-db-data
-    driver: local

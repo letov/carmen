@@ -25,6 +25,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
       FileModule,
       ServeStaticModule.forRoot({
           rootPath: `${process.cwd()}/${process.env.UPLOAD_PATH}`,
+          serveRoot: `/${process.env.UPLOAD_PATH}`,
       }),
   ],
 })

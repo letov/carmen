@@ -81,6 +81,7 @@ export class CustomerService {
         customer.phone = this.normalizePhone(customer.phone);
         if ( customerInput.uploadImage ) {
             customer.image = await this.fileService.uploadImage(customerInput.uploadImage)
+                .then((imagePath) => this.fileService.validateImageType(imagePath))
                 .then((imagePath) => this.fileService.convertToPNG(imagePath))
                 .catch((errorMessage) => {
                     throw new Error(errorMessage);
