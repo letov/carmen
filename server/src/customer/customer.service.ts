@@ -86,6 +86,8 @@ export class CustomerService {
                     throw new Error(errorMessage);
                 })
                 .then((imagePath) => path.basename(imagePath));
+        } else {
+            customer.image = null;
         }
         return customer;
     }
