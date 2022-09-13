@@ -99,7 +99,7 @@ resetPagination();
             <template #thumb>
               <van-image
                   round
-                  :src="getCustomerAvatar(customer.image)"
+                  :src="getCustomerAvatar(customer.image, customer.phone)"
               />
             </template>
           </van-card>

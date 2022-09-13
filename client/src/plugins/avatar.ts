@@ -1,7 +1,7 @@
-//import { generateFromString } from "generate-avatar";
+import { generateFromString } from "generate-avatar";
 
-export const getCustomerAvatar = (image : string | null) => {
-    return '';/*null === image
-        ? 'data:image/svg+xml;utf8,' + generateFromString("example@test.com")
-        : import.meta.env.VITE_SERVER_URL + '/' + image;*/
+export const getCustomerAvatar = (image : string | null, seed: string) => {
+    return null === image
+        ? `data:image/svg+xml;utf8,${generateFromString(seed)}`
+        : `${import.meta.env.VITE_SERVER_URL}/${image}`;
 }

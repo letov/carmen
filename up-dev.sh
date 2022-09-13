@@ -17,8 +17,8 @@
   -v /data:/data \
   -d redis); \
 
-npm --prefix client i \
-& npm --prefix server i
+npm --prefix client i
+npm --prefix server i
 
 npm --prefix client run dev \
 & npm --prefix server run start:dev

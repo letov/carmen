@@ -14,7 +14,7 @@ const props = defineProps({
 const { fetchCustomer, deleteCustomer, createCustomer, updateCustomer } = useCustomerStore();
 const editedCustomer = ref(new CustomerDTO());
 const isNewUser = () => editedCustomer.value.id === null;
-const uploadFile = ref([]);
+const uploadFile = ref<UploaderFileListItem[]>([]);
 
 fetchCustomer(Number(props.customerIdInput));
 const { customer, loading } = storeToRefs(useCustomerStore());
