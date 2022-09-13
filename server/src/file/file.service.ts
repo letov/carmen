@@ -27,13 +27,13 @@ export class FileService {
                     writeStream.on('error', () => reject('File write error'));
                     readStream.on('error', () => reject('File read error'));
                     readStream.pipe(writeStream);
-                    readStream.pipe(new FirstChunkStream({ chunkSize: 12 }, async (chunk) => {
+                    /*readStream.pipe(new FirstChunkStream({ chunkSize: 12 }, async (chunk) => {
                         const { mime } = imageType(chunk);
                         if (!this.validateMimeType(mime)) {
                             reject('Invalid image type');
                         }
                         return chunk;
-                    }));
+                    }));*/
                     writeStream.on('finish', () => resolve(uniqFilePath));
                 })
             })

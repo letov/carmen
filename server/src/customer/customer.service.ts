@@ -76,7 +76,8 @@ export class CustomerService {
     }
     private async convertCustomerInput(customerInput: CustomerInput): Promise<ICustomer> {
         let customer = new Customer();
-        Object.assign(customer, customerInput)
+        const { uploadImage, ..._customer } = customerInput;
+        Object.assign(customer, _customer)
         customer.phone = this.normalizePhone(customer.phone);
         if ( customerInput.uploadImage ) {
             customer.image = await this.fileService.uploadImage(customerInput.uploadImage)
@@ -84,7 +85,7 @@ export class CustomerService {
                 .catch((errorMessage) => {
                     throw new Error(errorMessage);
                 })
-                .then((imagePath) => path.basename(imagePath))
+                .then((imagePath) => path.basename(imagePath));
         }
         return customer;
     }

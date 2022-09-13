@@ -23,7 +23,7 @@ export class Customer extends CustomerDTO {
 
 export class CustomerInput {
     constructor(customer: ICustomer) {
-        const { id, image, ..._customer} = customer;
+        const { id, image, ..._customer } = customer;
         Object.assign(this, _customer);
     }
 }

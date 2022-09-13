@@ -45,10 +45,10 @@ export const useCustomerStore = defineStore('customer', {
                     }
                 `,
                 variables: {
-                    "skip": pagination.skip(),
-                    "take": pagination.take(),
-                    "name": filter.name,
-                    "phone": filter.phone
+                    skip: pagination.skip(),
+                    take: pagination.take(),
+                    name: filter.name,
+                    phone: filter.phone
                 }
             })
             .then(({data}) => {
@@ -79,7 +79,7 @@ export const useCustomerStore = defineStore('customer', {
                     }
                 `,
                 variables: {
-                    "customerId": customerId,
+                    customerId,
                 }
             })
             .then(({data}) => {
@@ -103,7 +103,7 @@ export const useCustomerStore = defineStore('customer', {
                     }
                 `,
                 variables: {
-                    "customerId": customerId,
+                    customerId,
                 }
             })
             .then(({data}) => {
@@ -130,7 +130,7 @@ export const useCustomerStore = defineStore('customer', {
                     }
                 `,
                 variables: {
-                    "customerInput": new CustomerInput(customer)
+                    customerInput: { ...new CustomerInput(customer) }
                 }
             })
             .then(({data}) => {
@@ -155,8 +155,8 @@ export const useCustomerStore = defineStore('customer', {
                     }
                 `,
                 variables: {
-                    "id": customer.id,
-                    "customerInput": new CustomerInput(customer)
+                    id: customer.id,
+                    customerInput: { ...new CustomerInput(customer) }
                 }
             })
             .then(({data}) => {

@@ -1,5 +1,5 @@
 import { Customer } from "./customer.model";
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Field, InputType, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { CustomerService } from "./customer.service";
 import { CustomerInput } from "./dto/customer.dto";
 import { FetchCustomersPaginationArgs } from "./dto/fetch-customers-pagination-args.dto";

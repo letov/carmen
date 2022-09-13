@@ -9,7 +9,9 @@ export const GraphQLConfig ={
     playground: process.env.NODE_ENV !== 'production',
     autoSchemaFile: 'schema.gql',
     formatError: (error: GraphQLError) => {
-        console.log(error)
+        if (process.env.NODE_ENV !== 'production') {
+            console.log(error);
+        }
         let graphQLFormattedError: GraphQLFormattedError;
         if (REQUEST_EXCEPTION_CODE === error.extensions?.code) {
             graphQLFormattedError = { message: error.extensions?.response['message'].join('\n') };

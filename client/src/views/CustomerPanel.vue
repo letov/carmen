@@ -23,6 +23,11 @@ watch(() => props.customerIdInput, (value) => {
 }, { deep: true });
 watch(customer, (value) => {
   editedCustomer.value = value ? new Customer(value) : new CustomerDTO();
+  if (null !== editedCustomer.value.image) {
+    uploadFile.value = [{
+      url: `${import.meta.env.VITE_SERVER_URL}/${editedCustomer.value.image}`
+    }];
+  }
 }, { deep: true });
 
 const _deleteCustomer = () => {
@@ -98,7 +103,13 @@ const afterRead = (file: UploaderFileListItem) => {
 
     <div v-else>
       <div class="avatar">
-        <van-uploader v-model="uploadFile" :before-read="beforeRead" :after-read="afterRead" :max-count="1"/>
+        <van-uploader
+            preview-size="300"
+            v-model="uploadFile"
+            :before-read="beforeRead"
+            :after-read="afterRead"
+            :max-count="1"
+        />
       </div>
       <van-cell-group inset>
         <van-field v-model="editedCustomer.name" label="Имя" />
@@ -119,7 +130,7 @@ const afterRead = (file: UploaderFileListItem) => {
   </div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .avatar {
   padding: 10px 0px 20px;
   text-align: center;
