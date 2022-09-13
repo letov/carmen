@@ -1,11 +1,11 @@
 FROM node:16.16.0
 
 WORKDIR /client
-COPY ./client/package.json /client/package.json
+COPY ./client/package*.json ./
 RUN npm install
 
 WORKDIR /server
-COPY ./server/package.json /server/package.json
+COPY ./server/package*.json ./
 RUN npm install
 
 WORKDIR /client
@@ -16,4 +16,4 @@ WORKDIR /server
 COPY ./server /server
 RUN npm run build
 
-CMD npm run start:prod
+CMD ["npm", "run", "start:prod"]
