@@ -13,6 +13,9 @@ export class CustomerInput {
     @Field()
     @IsPhoneNumber(<CountryCode>localeConfig.region)
     phone: string;
+    @Field(() => String, { nullable: true })
+    @IsOptional()
+    image?: string;
     @Field(() => GraphQLUpload, { nullable: true })
     @IsOptional()
     uploadImage?: Promise<FileUpload>;

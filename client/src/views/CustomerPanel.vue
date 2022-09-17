@@ -118,6 +118,7 @@ const onOversize = (file: UploaderFileListItem) => {
             :max-count="1"
             :max-size="15 * 1024 * 1024"
             @oversize="onOversize"
+            @delete="editedCustomer.image = null"
         />
       </div>
       <van-cell-group inset>

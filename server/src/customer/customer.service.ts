@@ -87,8 +87,8 @@ export class CustomerService {
                     throw new Error(errorMessage);
                 })
                 .then((imagePath) => path.basename(imagePath));
-        } else {
-            customer.image = null;
+        } else if (null !== customer.image) {
+            delete customer.image;
         }
         return customer;
     }
@@ -99,7 +99,6 @@ export class CustomerService {
         }
         return result;
     }
-
     private clearCustomerListCache() {
         return this.cacheManager.store.keys('customer:findAll:*')
             .then((response) => {

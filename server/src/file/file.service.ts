@@ -52,7 +52,7 @@ export class FileService {
     convertToPNG(imagePath: string): Promise<string> {
         const uniqFilePath = uniqueFilename(`${process.cwd()}/${process.env.UPLOAD_PATH}`) + '.png';
         return sharp(imagePath)
-            .resize(Number(process.env.UPLOAD_IMAGE_SIZE))
+            .resize(Number(process.env.UPLOAD_IMAGE_SIZE), Number(process.env.UPLOAD_IMAGE_SIZE))
             .png()
             .toFile(uniqFilePath)
             .then(() => uniqFilePath);
