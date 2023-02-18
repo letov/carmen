@@ -28,7 +28,7 @@ type LoyaltyCustomer {
 
 type Query {
   customer(id: Float!): Customer!
-  customersPagination(skip: Int = 0, take: Int = 25, name: String = "", phone: String = ""): FetchCustomersPagination!
+  customersPagination(skip: Int! = 0, take: Int! = 25, name: String! = "", phone: String! = ""): FetchCustomersPagination!
   discounts: [LoyaltyDiscount!]!
   customerDiscount(customerId: Float!): LoyaltyCustomer!
 }
